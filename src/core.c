@@ -1380,7 +1380,12 @@ void LoadEnvVars(box64context_t *context)
         AddPath("/usr/x86_64-linux-gnu/lib", &context->box64_ld_lib, 1);
     if(FileExist("/data/data/com.termux/files/usr/glibc/lib/x86_64-linux-gnu", 0))
         AddPath("/data/data/com.termux/files/usr/glibc/lib/x86_64-linux-gnu", &context->box64_ld_lib, 1);
-    #else if defined MOBOX_EDGE
+    #else
+    //TODO: Add Termux Library Path - Lily
+    if(FileExist("/data/data/com.termux/files/usr/lib/x86_64-linux-gnu", 0))
+        AddPath("/data/data/com.termux/files/usr/lib/x86_64-linux-gnu", &context->box64_ld_lib, 1);
+    #endif
+    #if defined MOBOX_EDGE
     char baseDir[] = "/data/user/0/com.antutu.ABenchMark/files/usr/glibc/lib";
     char subDir[] = "x86_64-linux-gnu";
     char fullPath[PATH_MAX];
@@ -1390,11 +1395,8 @@ void LoadEnvVars(box64context_t *context)
     } else {
       AddPath(baseDir, &context.box64_ld_lib, 1);<
     }
-    #else
-    //TODO: Add Termux Library Path - Lily
-    if(FileExist("/data/data/com.termux/files/usr/lib/x86_64-linux-gnu", 0))
-        AddPath("/data/data/com.termux/files/usr/lib/x86_64-linux-gnu", &context->box64_ld_lib, 1);
     #endif
+
     if(getenv("LD_LIBRARY_PATH"))
         PrependList(&context->box64_ld_lib, getenv("LD_LIBRARY_PATH"), 1);   // in case some of the path are for x86 world
     if(getenv("BOX64_EMULATED_LIBS")) {
@@ -1700,15 +1702,17 @@ static void load_rcfiles()
         LoadRCFile("/etc/box64.box64rc");
     else if(FileExist("/data/data/com.termux/files/usr/glibc/etc/box64.box64rc", IS_FILE))
         LoadRCFile("/data/data/com.termux/files/usr/glibc/etc/box64.box64rc");
-    #else if defined MOBOX_EDGE
-    if(FileExist("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc", IS_FILE))
-        LoadRCFile("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc);
     #else
     else if(FileExist("/data/data/com.termux/files/usr/etc/box64.box64rc", IS_FILE))
         LoadRCFile("/data/data/com.termux/files/usr/etc/box64.box64rc");
     #endif
     else
         LoadRCFile(NULL);   // load default rcfile
+    #if defined MOBOX_EDGE
+    if(FileExist("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc", IS_FILE))
+        LoadRCFile("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc);
+    #endif
+
 
     char* p = getenv("HOME");
     if(p) {
@@ -1719,6 +1723,7 @@ static void load_rcfiles()
             LoadRCFile(tmp);
     }
 }
+
 
 #ifndef STATICBUILD
 void pressure_vessel(int argc, const char** argv, int nextarg, const char* prog);
