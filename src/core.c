@@ -1391,9 +1391,9 @@ void LoadEnvVars(box64context_t *context)
     char fullPath[PATH_MAX];
     snprintf(fullPath, sizeof(fullPath), "%s/%s", baseDir, subDir);
     if (FileExist(fullPath, 1)) {
-      AddPath(fullPath, &context.box64_ld_lib, 1);
+      AddPath(fullPath, &context->box64_ld_lib, 1);
     } else {
-      AddPath(baseDir, &context.box64_ld_lib, 1);<
+      AddPath(baseDir, &context->box64_ld_lib, 1);
     }
     #endif
 
@@ -1710,7 +1710,7 @@ static void load_rcfiles()
         LoadRCFile(NULL);   // load default rcfile
     #if defined MOBOX_EDGE
     if(FileExist("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc", IS_FILE))
-        LoadRCFile("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc);
+        LoadRCFile("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc");
     #endif
 
 
