@@ -1380,6 +1380,16 @@ void LoadEnvVars(box64context_t *context)
         AddPath("/usr/x86_64-linux-gnu/lib", &context->box64_ld_lib, 1);
     if(FileExist("/data/data/com.termux/files/usr/glibc/lib/x86_64-linux-gnu", 0))
         AddPath("/data/data/com.termux/files/usr/glibc/lib/x86_64-linux-gnu", &context->box64_ld_lib, 1);
+    #else if defined MOBOX_EDGE
+    char baseDir[] = "/data/user/0/com.antutu.ABenchMark/files/usr/glibc/lib";
+    char subDir[] = "x86_64-linux-gnu";
+    char fullPath[PATH_MAX];
+    snprintf(fullPath, sizeof(fullPath), "%s/%s", baseDir, subDir);
+    if (FileExist(fullPath, 1)) {
+      AddPath(fullPath, &context.box64_ld_lib, 1);
+    } else {
+      AddPath(baseDir, &context.box64_ld_lib, 1);<
+    }
     #else
     //TODO: Add Termux Library Path - Lily
     if(FileExist("/data/data/com.termux/files/usr/lib/x86_64-linux-gnu", 0))
@@ -1690,6 +1700,9 @@ static void load_rcfiles()
         LoadRCFile("/etc/box64.box64rc");
     else if(FileExist("/data/data/com.termux/files/usr/glibc/etc/box64.box64rc", IS_FILE))
         LoadRCFile("/data/data/com.termux/files/usr/glibc/etc/box64.box64rc");
+    #else if defined MOBOX_EDGE
+    if(FileExist("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc", IS_FILE))
+        LoadRCFile("/data/user/0/com.antutu.ABenchMark/files/usr/glibc/etc/box64.box64rc);
     #else
     else if(FileExist("/data/data/com.termux/files/usr/etc/box64.box64rc", IS_FILE))
         LoadRCFile("/data/data/com.termux/files/usr/etc/box64.box64rc");
