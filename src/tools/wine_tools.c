@@ -70,7 +70,7 @@ void wine_prereserve(const char* reserve)
     int idx = 0;
     while(my_wine_reserve[idx].addr && my_wine_reserve[idx].size) {
         if(!isBlockFree(my_wine_reserve[idx].addr, my_wine_reserve[idx].size)) {
-            printf_log(LOG_NONE, "Warning, prereserve of %p:0x%lx is not free\n", my_wine_reserve[idx].addr, my_wine_reserve[idx].size);
+            printf_log(LOG_DEBUG, "Warning, prereserve of %p:0x%lx is not free\n", my_wine_reserve[idx].addr, my_wine_reserve[idx].size);
             my_wine_reserve[idx].addr = NULL;
             my_wine_reserve[idx].size = 0;
         } else {
